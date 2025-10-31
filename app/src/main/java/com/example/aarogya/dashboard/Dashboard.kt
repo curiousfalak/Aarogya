@@ -86,7 +86,6 @@ fun MetricsGrid() {
     Column {
         Row(
             modifier = Modifier
-                .background(Color.White)
                 .fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
@@ -109,7 +108,7 @@ fun MetricsGrid() {
         }
         Spacer(modifier = Modifier.height(12.dp))
         Row(
-            modifier = Modifier.fillMaxWidth().background(Color.White),
+            modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             MetricSmallCard("Avg. Heart Rate", "72", "bpm", Color(0xFFFF6D6D))
