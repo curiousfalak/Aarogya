@@ -1,8 +1,10 @@
 package com.example.aarogya.composables
 
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -20,8 +22,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.graphics.drawscope.scale
+import androidx.compose.ui.graphics.drawscope.withTransform
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -70,26 +78,68 @@ fun SplashScreen(navController: NavController, mainViewModel: MainViewModel = vi
 //            }
 //        }
 
-    Surface(
-        modifier = Modifier.fillMaxSize().background(color = Color.White)
-    ) {
-        Column(
-            modifier = Modifier.fillMaxSize().background(color = Color.White),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally,
-        ) {
-            Text("Aarogya",
-                fontSize = 32.sp,
-                fontWeight = FontWeight.W400,
-                )
+    val backgroundColor = Color(0xFF4CAF50)
+    val dumbbell = ImageBitmap.imageResource(id = R.drawable.img)
 
-            Spacer(Modifier.height(24.dp))
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(backgroundColor)
+    ) {
+
+        Canvas(modifier = Modifier.fillMaxSize()) {
+            val spacing = 320f
+            val imageSize = 80f
+            val rotation = 35f
+
+            val cols = (size.width / spacing).toInt() + 2
+            val rows = (size.height / spacing).toInt() + 2
+
+            val verticalOffset = -spacing * 2
+
+            for (x in 0 until cols) {
+                for (y in 0 until rows) {
+                    val offsetX = x * spacing + if (y % 2 == 0) spacing / 2 else 0f
+                    val offsetY = y * spacing + verticalOffset
+
+                    withTransform({
+                        translate(left = offsetX, top = offsetY)
+                        rotate(degrees = rotation, pivot = Offset.Zero)
+                        scale(0.6f)
+                    }) {
+                        drawImage(
+                            image = dumbbell,
+                            topLeft = Offset.Zero,
+                            alpha = 0.15f,
+                            colorFilter = ColorFilter.tint(Color.White.copy(alpha = 0.3f))
+                        )
+                    }
+                }
+            }
+        }
+
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Color.Transparent),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
             Image(
                 painter = painterResource(id = R.drawable.img),
                 contentDescription = "Dumbbells",
-                modifier = Modifier.size(112.dp).scale(2f,2f)
-                    .clip(shape = RoundedCornerShape(45.dp)),
+                modifier = Modifier
+                    .size(120.dp)
+                    .clip(RoundedCornerShape(45.dp)),
                 contentScale = ContentScale.Crop
+            )
+
+            Spacer(Modifier.height(16.dp))
+
+            Text(
+                text = "Aarogya",
+                fontSize = 44.sp,
+                fontWeight = FontWeight.W800,
             )
         }
     }
