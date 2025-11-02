@@ -6,6 +6,7 @@ import coil3.compose.AsyncImage
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
@@ -13,6 +14,11 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -23,13 +29,21 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.zIndex
 import co.yml.charts.axis.AxisData
+import co.yml.charts.common.model.PlotType
 import co.yml.charts.common.model.Point
 import co.yml.charts.ui.linechart.LineChart
+import co.yml.charts.ui.linechart.model.GridLines
+import co.yml.charts.ui.linechart.model.IntersectionPoint
 import co.yml.charts.ui.linechart.model.LineChartData
 import co.yml.charts.ui.linechart.model.LinePlotData
 import co.yml.charts.ui.linechart.model.LineStyle
+import co.yml.charts.ui.linechart.model.SelectionHighlightPoint
+import co.yml.charts.ui.linechart.model.ShadowUnderLine
 import com.example.aarogya.R
+import kotlinx.coroutines.delay
+import java.util.stream.Stream
 
 @Composable
 fun WearableDashboard() {
@@ -40,7 +54,6 @@ fun WearableDashboard() {
             .padding(16.dp)
             .verticalScroll(rememberScrollState())
     ) {
-        // Header
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
@@ -51,12 +64,12 @@ fun WearableDashboard() {
                 style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)
             )
             Row(verticalAlignment = Alignment.CenterVertically) {
-                IconButton(onClick = { /* Notifications */ }) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.ic_launcher_foreground),
-                        contentDescription = "Notifications"
-                    )
-                }
+//                IconButton(onClick = { /* Notifications */ }) {
+//                    Icon(
+//                        painter = painterResource(id = R.drawable.ic_launcher_foreground),
+//                        contentDescription = "Notifications"
+//                    )
+//                }
                 AsyncImage(
                     model = "https://randomuser.me/api/portraits/women/65.jpg",
                     contentDescription = "Profile",
@@ -69,12 +82,10 @@ fun WearableDashboard() {
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Top Metrics Grid
         MetricsGrid()
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        // Charts Section
         StepsTrendChart()
         Spacer(modifier = Modifier.height(24.dp))
         CaloriesBurnedChart()
@@ -121,7 +132,7 @@ fun MetricsGrid() {
 fun MetricCard(title: String, value: String, unit: String, progress: Float, goal: String, color: Color) {
     Card(
         modifier = Modifier
-            .background(Color.White)
+//            .background(Color.White)
             .width(170.dp)
             .height(130.dp),
         shape = RoundedCornerShape(16.dp),
@@ -170,39 +181,7 @@ fun MetricSmallCard(title: String, value: String, unit: String, color: Color) {
 
 @Composable
 fun StepsTrendChart() {
-    val points = listOf(
-        Point(0f, 9000f),
-        Point(1f, 7500f),
-        Point(2f, 8200f),
-        Point(3f, 10500f),
-        Point(4f, 11800f),
-        Point(5f, 9700f),
-        Point(6f, 8800f)
-    )
-
-    val data = LineChartData(
-        linePlotData = LinePlotData(
-            lines = listOf(
-                Line(
-                    dataPoints = points,
-                    lineStyle = LineStyle(color = Color(0xFF4CAF50))
-                )
-            )
-        ),
-        xAxisData = AxisData.Builder().axisStepSize(40.dp)
-            .labelData { i -> listOf("Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun")[i] }
-            .build(),
-        yAxisData = AxisData.Builder().steps(5).build()
-    )
-
-    ChartCard("Daily Steps Trend", "You've maintained a strong step count this week, exceeding your goal on most days.") {
-        LineChart(modifier = Modifier.height(200.dp), lineChartData = data)
-    }
-}
-
-@Composable
-fun CaloriesBurnedChart() {
-    val points = listOf(
+    val yPoints = listOf(
         Point(0f, 400f),
         Point(1f, 320f),
         Point(2f, 450f),
@@ -212,43 +191,207 @@ fun CaloriesBurnedChart() {
         Point(6f, 470f)
     )
 
-    val data = LineChartData(
-        linePlotData = LinePlotData(
-            lines = listOf(
-                Line(
-                    dataPoints = points,
-                    lineStyle = LineStyle(color = Color(0xFF2196F3))
+    val xPoints = listOf("Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun")
+
+    var displayedPoints by remember { mutableStateOf(listOf<Point>()) }
+
+    LaunchedEffect(Unit) {
+        yPoints.forEachIndexed { index, _ ->
+            delay(300)
+            displayedPoints = yPoints.take(index + 1)
+        }
+    }
+
+    if (displayedPoints.isNotEmpty()) {
+        val minY = yPoints.minOf { it.y }
+        val maxY = yPoints.maxOf { it.y }
+        val stepSizeY = ((maxY - minY) / 4).toInt()
+
+        val data = LineChartData(
+            linePlotData = LinePlotData(
+                lines = listOf(
+                    Line(
+                        dataPoints = displayedPoints,
+                        lineStyle = LineStyle(color = Color(0xFF2196F3)),
+                        IntersectionPoint(Color(0xFF2196F3)),
+                        SelectionHighlightPoint(Color(0xFF1976D2)),
+                        shadowUnderLine = ShadowUnderLine(Color(0x332196F3))
+                    )
                 )
+            ),
+            xAxisData = AxisData.Builder()
+                .steps(xPoints.size - 1)
+                .axisStepSize(50.dp)
+                .axisLabelColor(Color.Black)
+                .axisLineColor(Color.Gray)
+                .labelAndAxisLinePadding(10.dp)
+                .labelData { i -> xPoints[i] }
+                .backgroundColor(Color.White)
+                .build(),
+            yAxisData = AxisData.Builder()
+                .steps(4)
+                .axisLabelColor(Color.Black)
+                .axisLineColor(Color.Gray)
+                .labelData { i -> "${(minY + (i * stepSizeY)).toInt()} steps" }
+                .labelAndAxisLinePadding(10.dp)
+                .backgroundColor(Color.White)
+                .build(),
+            gridLines = GridLines(),
+            backgroundColor = Color.White
+        )
+
+        ChartCard(
+            title = "Daily Steps Trend",
+            subtitle = "You've maintained a strong step count this week, exceeding your goal on most days."
+        ) {
+            LineChart(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(220.dp)
+                    .align(Alignment.Center),
+                lineChartData = data
             )
-        ),
-        xAxisData = AxisData.Builder().axisStepSize(40.dp)
-            .labelData { i -> listOf("Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun")[i] }
-            .build(),
-        yAxisData = AxisData.Builder().steps(5).build()
+        }
+    } else {
+        ChartCard(title = "Daily Steps Trend", subtitle = "Loading data...") {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(200.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                CircularProgressIndicator()
+            }
+        }
+    }
+}
+
+
+@Composable
+fun CaloriesBurnedChart() {
+    val caloriePoints = listOf(
+        Point(0f, 400f),
+        Point(1f, 320f),
+        Point(2f, 450f),
+        Point(3f, 480f),
+        Point(4f, 560f),
+        Point(5f, 590f),
+        Point(6f, 470f)
     )
 
-    ChartCard("Calories Burned Overview", "Your calorie burn has been consistent, showing good effort in your workouts.") {
-        LineChart(modifier = Modifier.height(200.dp), lineChartData = data)
+    val days = listOf("Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun")
+
+    var displayedPoints by remember { mutableStateOf(listOf<Point>()) }
+
+    LaunchedEffect(Unit) {
+        caloriePoints.forEachIndexed { index, _ ->
+            delay(300)
+            displayedPoints = caloriePoints.take(index + 1)
+        }
+    }
+
+    if (displayedPoints.isNotEmpty()) {
+        val minCalories = caloriePoints.minOf { it.y }
+        val maxCalories = caloriePoints.maxOf { it.y }
+        val stepSize = ((maxCalories - minCalories) / 4).toInt()
+
+        val data = LineChartData(
+            linePlotData = LinePlotData(
+                lines = listOf(
+                    Line(
+                        dataPoints = displayedPoints,
+                        lineStyle = LineStyle(color = Color(0xFFFF9800)),
+                        IntersectionPoint(Color(0xFFFFA726)),
+                        SelectionHighlightPoint(Color(0xFFFFA726)),
+                        shadowUnderLine = ShadowUnderLine(Color(0x33FF9800))
+                    )
+                )
+            ),
+            xAxisData = AxisData.Builder()
+                .steps(days.size - 1)
+                .axisStepSize(50.dp)
+                .axisLabelColor(Color.Black)
+                .axisLineColor(Color.Gray)
+                .labelAndAxisLinePadding(10.dp)
+                .labelData { i -> days[i] }
+                .backgroundColor(Color.White)
+                .build(),
+            yAxisData = AxisData.Builder()
+                .steps(4)
+                .axisLabelColor(Color.Black)
+                .axisLineColor(Color.Gray)
+                .labelData { i -> "${(minCalories + (i * stepSize)).toInt()} kcal" }
+                .labelAndAxisLinePadding(10.dp)
+                .backgroundColor(Color.White)
+                .build(),
+            gridLines = GridLines(),
+            backgroundColor = Color.White
+        )
+
+        ChartCard(
+            title = "Calories Burned Overview",
+            subtitle = "Your calorie burn has been consistent, showing good effort in your workouts."
+        ) {
+            LineChart(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(220.dp)
+                    .align(Alignment.Center),
+                lineChartData = data
+            )
+        }
+    } else {
+        ChartCard(title = "Calories Burned Overview", subtitle = "Loading data...") {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(200.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                CircularProgressIndicator()
+            }
+        }
     }
 }
 
 @Composable
-fun ChartCard(title: String, subtitle: String, content: @Composable () -> Unit) {
+fun ChartCard(title: String, subtitle: String, content: @Composable BoxScope.() -> Unit) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(16.dp),
         elevation = CardDefaults.cardElevation(4.dp),
         colors = CardDefaults.cardColors(containerColor = Color.White)
     ) {
-        Column(modifier = Modifier.padding(16.dp)) {
+        Column(
+            modifier = Modifier.padding(16.dp)
+        ) {
             Text(title, fontWeight = FontWeight.Bold, fontSize = 16.sp)
             Spacer(modifier = Modifier.height(8.dp))
-            content()
+            
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(220.dp)
+            ) {
+                content()
+
+                Box(
+                    modifier = Modifier
+                        .height(220.dp)
+                        .width(20.dp)
+                        .background(Color.White)
+                        .align(Alignment.CenterEnd)
+                        .offset(x = (-20).dp)
+                        .zIndex(1f)
+                )
+            }
+
             Spacer(modifier = Modifier.height(8.dp))
             Text(subtitle, color = Color.Gray, fontSize = 12.sp)
         }
     }
 }
+
 
 @Preview(showBackground = true)
 @Composable
