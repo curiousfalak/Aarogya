@@ -23,7 +23,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.aarogya.R
 
-
 @Composable
 fun LoginScreen() {
     var email by remember { mutableStateOf("") }
@@ -41,15 +40,15 @@ fun LoginScreen() {
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            // App Icon (using Material Icon)
+            // App Icon (ensure drawable exists)
             Image(
                 painter = painterResource(id = R.drawable.img),
                 contentDescription = "App Icon",
                 modifier = Modifier
-                    .size(100.dp)
+                    .size(120.dp)
                     .padding(bottom = 20.dp)
-
             )
+
             Text(
                 text = "Welcome Back!",
                 style = TextStyle(
@@ -66,31 +65,60 @@ fun LoginScreen() {
                 modifier = Modifier.padding(bottom = 30.dp)
             )
 
+            // Email field
             OutlinedTextField(
                 value = email,
                 onValueChange = { email = it },
                 label = { Text("Email address") },
-                leadingIcon = { Icon(Icons.Default.Email, contentDescription = null) },
+                leadingIcon = {
+                    Icon(Icons.Default.Email, contentDescription = null, tint = Color.Black)
+                },
                 singleLine = true,
                 shape = RoundedCornerShape(12.dp),
+                colors = TextFieldDefaults.colors(
+                    focusedTextColor = Color.Black,
+                    unfocusedTextColor = Color.Black,
+                    cursorColor = Color.Black,
+                    focusedContainerColor = Color.Transparent,
+                    unfocusedContainerColor = Color.Transparent,
+                    focusedIndicatorColor = Color.Black,
+                    unfocusedIndicatorColor = Color.Gray,
+                    focusedLabelColor = Color.Black,
+                    unfocusedLabelColor = Color.DarkGray
+                ),
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(vertical = 8.dp)
             )
 
+            // Password field
             OutlinedTextField(
                 value = password,
                 onValueChange = { password = it },
                 label = { Text("Password") },
-                leadingIcon = { Icon(Icons.Default.Lock, contentDescription = null) },
+                leadingIcon = {
+                    Icon(Icons.Default.Lock, contentDescription = null, tint = Color.Black)
+                },
                 visualTransformation = PasswordVisualTransformation(),
                 singleLine = true,
                 shape = RoundedCornerShape(12.dp),
+                colors = TextFieldDefaults.colors(
+                    focusedTextColor = Color.Black,
+                    unfocusedTextColor = Color.Black,
+                    cursorColor = Color.Black,
+                    focusedContainerColor = Color.Transparent,
+                    unfocusedContainerColor = Color.Transparent,
+                    focusedIndicatorColor = Color.Black,
+                    unfocusedIndicatorColor = Color.Gray,
+                    focusedLabelColor = Color.Black,
+                    unfocusedLabelColor = Color.DarkGray
+                ),
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(vertical = 8.dp)
             )
 
+            // Login button
             Button(
                 onClick = { /* handle login */ },
                 colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF4CE116)),
@@ -105,7 +133,6 @@ fun LoginScreen() {
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Bold,
                     color = Color.White
-
                 )
             }
 
