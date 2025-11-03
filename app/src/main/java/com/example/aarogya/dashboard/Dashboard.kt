@@ -142,7 +142,7 @@ fun MetricCard(title: String, value: String, unit: String, progress: Float, goal
         Column(modifier = Modifier
             .background(Color.White)
             .padding(12.dp)
-            ) {
+        ) {
             Text(title, color = color, fontWeight = FontWeight.Bold, fontSize = 14.sp)
             Spacer(modifier = Modifier.height(8.dp))
             Text("$value", fontWeight = FontWeight.Bold, fontSize = 24.sp)
@@ -367,7 +367,7 @@ fun ChartCard(title: String, subtitle: String, content: @Composable BoxScope.() 
         ) {
             Text(title, fontWeight = FontWeight.Bold, fontSize = 16.sp)
             Spacer(modifier = Modifier.height(8.dp))
-            
+
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
