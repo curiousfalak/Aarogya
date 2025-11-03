@@ -24,7 +24,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             AarogyaTheme{
                 Spacer(modifier = Modifier.height(1000.dp))
-                LeaderboardScreen()
+
                 }
             }
         }
