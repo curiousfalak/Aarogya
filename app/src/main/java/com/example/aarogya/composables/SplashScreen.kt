@@ -78,7 +78,8 @@ fun SplashScreen(navController: NavController, mainViewModel: MainViewModel = vi
 //            }
 //        }
 
-    val backgroundColor = Color(0xFF4CAF50)
+//    val backgroundColor = Color(0xFF4CAF50)
+    val backgroundColor = Color(0xFF4CE116)
     val dumbbell = ImageBitmap.imageResource(id = R.drawable.img)
 
     Box(
@@ -105,13 +106,13 @@ fun SplashScreen(navController: NavController, mainViewModel: MainViewModel = vi
                     withTransform({
                         translate(left = offsetX, top = offsetY)
                         rotate(degrees = rotation, pivot = Offset.Zero)
-                        scale(0.6f)
+                        scale(0.4f)
                     }) {
                         drawImage(
                             image = dumbbell,
                             topLeft = Offset.Zero,
                             alpha = 0.15f,
-                            colorFilter = ColorFilter.tint(Color.White.copy(alpha = 0.3f))
+                            colorFilter = ColorFilter.tint(Color.Black.copy(alpha = 0.3f))
                         )
                     }
                 }

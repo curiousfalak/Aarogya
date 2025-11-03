@@ -106,7 +106,7 @@ fun MetricsGrid() {
                 unit = "steps",
                 progress = 9850f / 10000f,
                 goal = "Goal: 10,000 steps",
-                color = Color(0xFF4CAF50)
+                color = Color(0xFF4CE116)
             )
             MetricCard(
                 title = "Calories Burned",
