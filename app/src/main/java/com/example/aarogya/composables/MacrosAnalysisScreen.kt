@@ -17,10 +17,11 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
 import kotlin.math.roundToInt
 
 @Composable
-fun MacrosAnalysisScreen() {
+fun MacrosAnalysisScreen(navController: NavHostController) {
     val backgroundColor = Color(0xFFF8F9FA)
     val accentGreen = Color(0xFF00C853)
     val accentBlue = Color(0xFF2962FF)
@@ -197,8 +198,3 @@ fun NutrientRow(label: String, value: String, valueColor: Color = Color.Black) {
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun Preview2() {
-    MacrosAnalysisScreen()
-}
