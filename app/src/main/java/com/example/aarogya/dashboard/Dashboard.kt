@@ -47,7 +47,14 @@ import kotlinx.coroutines.delay
 import java.util.stream.Stream
 
 @Composable
-fun WearableDashboard(navController: NavController) {
+fun WearableDashboard(
+    navController: NavController,
+    username: String,
+    age: Int,
+    gender: String,
+    height: Float,
+    weight: Float
+) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -55,43 +62,75 @@ fun WearableDashboard(navController: NavController) {
             .padding(16.dp)
             .verticalScroll(rememberScrollState())
     ) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
+
+        // ✅ Welcome Card
+        Card(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 16.dp),
+            shape = RoundedCornerShape(20.dp),
+            elevation = CardDefaults.cardElevation(6.dp),
+            colors = CardDefaults.cardColors(containerColor = Color.White)
         ) {
-            Text(
-                text = "Wearable Data",
-                style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),color=Color.Black
-            )
-            Row(verticalAlignment = Alignment.CenterVertically) {
-//                IconButton(onClick = { /* Notifications */ }) {
-//                    Icon(
-//                        painter = painterResource(id = R.drawable.ic_launcher_foreground),
-//                        contentDescription = "Notifications"
-//                    )
-//                }
-                AsyncImage(
-                    model = "https://randomuser.me/api/portraits/women/65.jpg",
-                    contentDescription = "Profile",
-                    modifier = Modifier
-                        .size(36.dp)
-                        .clip(CircleShape)
-                )
+            Column(
+                modifier = Modifier.padding(20.dp),
+                horizontalAlignment = Alignment.Start
+            ) {
+
+                // 🔹 Row for Welcome Text + Profile Image
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = "Welcome, $username!",
+                        style = MaterialTheme.typography.headlineSmall.copy(
+                            fontWeight = FontWeight.Bold,
+                            color = Color(0xFF1EE56E)
+                        )
+                    )
+
+                    // ✅ Profile Image beside welcome text
+                    AsyncImage(
+                        model = "https://randomuser.me/api/portraits/women/65.jpg",
+                        contentDescription = "Profile",
+                        modifier = Modifier
+                            .size(60.dp)
+                            .clip(CircleShape)
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(12.dp))
+
+                // 🔹 User Info below
+                Text("Age: $age years", color = Color.DarkGray, fontSize = 18.sp)
+                Text("Gender: $gender", color = Color.DarkGray, fontSize = 18.sp)
+                Text("Height: $height cm", color = Color.DarkGray, fontSize = 18.sp)
+                Text("Weight: $weight kg", color = Color.DarkGray, fontSize = 18.sp)
             }
         }
+
+        Spacer(modifier = Modifier.height(24.dp))
+
+        // ✅ Rest of the Dashboard
+        Text(
+            text = "Wearable Data",
+            style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
+            color = Color.Black,
+            fontSize = 20.sp
+        )
 
         Spacer(modifier = Modifier.height(16.dp))
 
         MetricsGrid()
-
         Spacer(modifier = Modifier.height(24.dp))
-
         StepsTrendChart()
         Spacer(modifier = Modifier.height(24.dp))
         CaloriesBurnedChart()
     }
 }
+
 
 @Composable
 fun MetricsGrid() {

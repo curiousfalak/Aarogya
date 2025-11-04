@@ -122,8 +122,8 @@ fun LoginScreen(navController: NavController) {
             // Login button
             Button(
                 onClick = {
-                    navController.navigate("dashboard") {
-                        popUpTo("login") { inclusive = true }
+                    navController.navigate("info") {
+                        popUpTo("info") { inclusive = true }
                     }
                 },
                 colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF4CE116)),
