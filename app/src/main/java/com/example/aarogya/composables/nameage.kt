@@ -8,22 +8,29 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-
+import com.example.aarogya.data.datastore.UserPreferences
+import kotlinx.coroutines.launch
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun UserInfoScreen(onSubmit: (String, String, String, String, String) -> Unit) {
+
+    val userPreferences = UserPreferences(LocalContext.current)
+
     var username by remember { mutableStateOf("") }
     var age by remember { mutableStateOf("") }
     var gender by remember { mutableStateOf("") }
     var height by remember { mutableStateOf("") }
     var weight by remember { mutableStateOf("") }
+
+    val scope = rememberCoroutineScope()
 
     Column(
         modifier = Modifier
@@ -46,6 +53,15 @@ fun UserInfoScreen(onSubmit: (String, String, String, String, String) -> Unit) {
         Button(
             onClick = {
                 onSubmit(username, age, gender, height, weight)
+                scope.launch {
+                    userPreferences.saveUserData(
+                        age.toInt(),
+                        gender,
+                        height.toInt(),
+                        weight.toInt(),
+                        username
+                    )
+                }
             },
             modifier = Modifier.fillMaxWidth(),
             colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF4CE116))

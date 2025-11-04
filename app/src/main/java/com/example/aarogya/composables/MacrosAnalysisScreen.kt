@@ -12,11 +12,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.aarogya.data.datastore.UserPreferences
 import kotlin.math.roundToInt
 
 @Composable
@@ -25,6 +27,13 @@ fun MacrosAnalysisScreen() {
     val accentGreen = Color(0xFF00C853)
     val accentBlue = Color(0xFF2962FF)
     val accentRed = Color(0xFFFF5252)
+
+    val userPreferences = UserPreferences(LocalContext.current)
+
+//    val age by remember { mutableStateOf("") }
+//    val gender by remember { mutableStateOf("") }
+//    val height by remember { mutableStateOf("") }
+//    val weight by remember { mutableStateOf("") }
 
     val age = 22
     val gender = "female"
