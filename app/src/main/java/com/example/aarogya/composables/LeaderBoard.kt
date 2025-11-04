@@ -53,7 +53,7 @@ fun LeaderboardScreen() {
             fontWeight = FontWeight.Bold,
             modifier = Modifier
                 .align(Alignment.CenterHorizontally)
-                .padding(20.dp)
+                .padding(8.dp)
         )
 
         // 🔹 Tabs
@@ -61,7 +61,7 @@ fun LeaderboardScreen() {
             horizontalArrangement = Arrangement.SpaceEvenly,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(vertical = 12.dp)
+                .padding(vertical = 8.dp)
         ) {
             tabs.forEach { tab ->
                 val selected = tab == selectedTab

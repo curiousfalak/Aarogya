@@ -63,22 +63,15 @@ class MainViewModel : ViewModel() {
 fun SplashScreen(navController: NavController, mainViewModel: MainViewModel = viewModel()) {
     val isLoading by mainViewModel.isLoading.collectAsState()
 
-//        LaunchedEffect(key1 = isLoading) {
-//            if (!isLoading) {
-//                navController.navigate(Screen.Login.route) {
-//                    popUpTo("splash") { inclusive = true }
-//                }
-//            }
-//    }
-//        LaunchedEffect(key1 = isLoading) {
-//            if (!isLoading) {
-//                navController.navigate(Screen.NavigationDrawer.route) {
-//                    popUpTo("splash") { inclusive = true }
-//                }
-//            }
-//        }
+    LaunchedEffect(isLoading) {
+        if (!isLoading) {
+            navController.navigate("login") {
+                popUpTo("splash") { inclusive = true }
+            }
+        }
+    }
 
-//    val backgroundColor = Color(0xFF4CAF50)
+//    val backgroundColor  Color(0xFF4CAF50)
     val backgroundColor = Color(0xFF4CE116)
     val dumbbell = ImageBitmap.imageResource(id = R.drawable.img)
 

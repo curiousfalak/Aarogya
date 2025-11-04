@@ -30,6 +30,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
+import androidx.navigation.NavController
 import co.yml.charts.axis.AxisData
 import co.yml.charts.common.model.PlotType
 import co.yml.charts.common.model.Point
@@ -46,7 +47,7 @@ import kotlinx.coroutines.delay
 import java.util.stream.Stream
 
 @Composable
-fun WearableDashboard() {
+fun WearableDashboard(navController: NavController) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -60,8 +61,8 @@ fun WearableDashboard() {
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = "Wearable Integration",
-                style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)
+                text = "Wearable Data",
+                style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),color=Color.Black
             )
             Row(verticalAlignment = Alignment.CenterVertically) {
 //                IconButton(onClick = { /* Notifications */ }) {
@@ -107,6 +108,7 @@ fun MetricsGrid() {
                 progress = 9850f / 10000f,
                 goal = "Goal: 10,000 steps",
                 color = Color(0xFF4CE116)
+
             )
             MetricCard(
                 title = "Calories Burned",
@@ -122,7 +124,7 @@ fun MetricsGrid() {
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            MetricSmallCard("Avg. Heart Rate", "72", "bpm", Color(0xFFFF6D6D))
+            MetricSmallCard("Avg. Heart Rate", "72", "bpm", Color(0xFFFF6D6D),)
             MetricSmallCard("Distance", "6.5", "km", Color(0xFF673AB7))
         }
     }
@@ -134,7 +136,7 @@ fun MetricCard(title: String, value: String, unit: String, progress: Float, goal
         modifier = Modifier
 //            .background(Color.White)
             .width(170.dp)
-            .height(130.dp),
+            .height(140.dp),
         shape = RoundedCornerShape(16.dp),
         elevation = CardDefaults.cardElevation(4.dp),
         colors = CardDefaults.cardColors(containerColor = Color.White)
@@ -393,8 +395,3 @@ fun ChartCard(title: String, subtitle: String, content: @Composable BoxScope.() 
 }
 
 
-@Preview(showBackground = true)
-@Composable
-fun Preview(){
-    WearableDashboard()
-}
