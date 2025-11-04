@@ -82,7 +82,7 @@ fun MacrosAnalysisScreen(navController: NavController) {
                                 startAngle = startAngle,
                                 sweepAngle = sweepAngles[i],
                                 useCenter = false,
-                                style = Stroke(width = 30f, cap = StrokeCap.Round)
+                                style = Stroke(width = 50f, cap = StrokeCap.Round)
                             )
                             startAngle += sweepAngles[i]
                         }
