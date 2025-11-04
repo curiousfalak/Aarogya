@@ -18,11 +18,12 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
 import com.example.aarogya.data.datastore.UserPreferences
 import kotlin.math.roundToInt
 
 @Composable
-fun MacrosAnalysisScreen() {
+fun MacrosAnalysisScreen(navController: NavHostController) {
 
     val userPreferences = UserPreferences(LocalContext.current)
 
@@ -202,8 +203,4 @@ fun NutrientRow(label: String, value: String, valueColor: Color = Color.Black) {
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun Preview2() {
-    MacrosAnalysisScreen()
-}
+
