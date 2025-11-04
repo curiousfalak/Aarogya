@@ -21,10 +21,11 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.example.aarogya.R
 
 @Composable
-fun LoginScreen() {
+fun LoginScreen(navController: NavController) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
 
@@ -120,7 +121,11 @@ fun LoginScreen() {
 
             // Login button
             Button(
-                onClick = { /* handle login */ },
+                onClick = {
+                    navController.navigate("info") {
+                        popUpTo("info") { inclusive = true }
+                    }
+                },
                 colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF4CE116)),
                 shape = RoundedCornerShape(12.dp),
                 modifier = Modifier

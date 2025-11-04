@@ -30,6 +30,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
+import androidx.navigation.NavController
 import co.yml.charts.axis.AxisData
 import co.yml.charts.common.model.PlotType
 import co.yml.charts.common.model.Point
@@ -46,7 +47,14 @@ import kotlinx.coroutines.delay
 import java.util.stream.Stream
 
 @Composable
-fun WearableDashboard() {
+fun WearableDashboard(
+    navController: NavController,
+    username: String,
+    age: Int,
+    gender: String,
+    height: Float,
+    weight: Float
+) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -54,43 +62,75 @@ fun WearableDashboard() {
             .padding(16.dp)
             .verticalScroll(rememberScrollState())
     ) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
+
+        // ✅ Welcome Card
+        Card(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 16.dp),
+            shape = RoundedCornerShape(20.dp),
+            elevation = CardDefaults.cardElevation(6.dp),
+            colors = CardDefaults.cardColors(containerColor = Color.White)
         ) {
-            Text(
-                text = "Wearable Integration",
-                style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)
-            )
-            Row(verticalAlignment = Alignment.CenterVertically) {
-//                IconButton(onClick = { /* Notifications */ }) {
-//                    Icon(
-//                        painter = painterResource(id = R.drawable.ic_launcher_foreground),
-//                        contentDescription = "Notifications"
-//                    )
-//                }
-                AsyncImage(
-                    model = "https://randomuser.me/api/portraits/women/65.jpg",
-                    contentDescription = "Profile",
-                    modifier = Modifier
-                        .size(36.dp)
-                        .clip(CircleShape)
-                )
+            Column(
+                modifier = Modifier.padding(20.dp),
+                horizontalAlignment = Alignment.Start
+            ) {
+
+                // 🔹 Row for Welcome Text + Profile Image
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = "Welcome, $username!",
+                        style = MaterialTheme.typography.headlineSmall.copy(
+                            fontWeight = FontWeight.Bold,
+                            color = Color(0xFF1EE56E)
+                        )
+                    )
+
+                    // ✅ Profile Image beside welcome text
+                    AsyncImage(
+                        model = "https://randomuser.me/api/portraits/women/65.jpg",
+                        contentDescription = "Profile",
+                        modifier = Modifier
+                            .size(60.dp)
+                            .clip(CircleShape)
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(12.dp))
+
+                // 🔹 User Info below
+                Text("Age: $age years", color = Color.DarkGray, fontSize = 18.sp)
+                Text("Gender: $gender", color = Color.DarkGray, fontSize = 18.sp)
+                Text("Height: $height cm", color = Color.DarkGray, fontSize = 18.sp)
+                Text("Weight: $weight kg", color = Color.DarkGray, fontSize = 18.sp)
             }
         }
+
+        Spacer(modifier = Modifier.height(24.dp))
+
+        // ✅ Rest of the Dashboard
+        Text(
+            text = "Wearable Data",
+            style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
+            color = Color.Black,
+            fontSize = 20.sp
+        )
 
         Spacer(modifier = Modifier.height(16.dp))
 
         MetricsGrid()
-
         Spacer(modifier = Modifier.height(24.dp))
-
         StepsTrendChart()
         Spacer(modifier = Modifier.height(24.dp))
         CaloriesBurnedChart()
     }
 }
+
 
 @Composable
 fun MetricsGrid() {
@@ -107,6 +147,7 @@ fun MetricsGrid() {
                 progress = 9850f / 10000f,
                 goal = "Goal: 10,000 steps",
                 color = Color(0xFF4CE116)
+
             )
             MetricCard(
                 title = "Calories Burned",
@@ -122,7 +163,7 @@ fun MetricsGrid() {
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            MetricSmallCard("Avg. Heart Rate", "72", "bpm", Color(0xFFFF6D6D))
+            MetricSmallCard("Avg. Heart Rate", "72", "bpm", Color(0xFFFF6D6D),)
             MetricSmallCard("Distance", "6.5", "km", Color(0xFF673AB7))
         }
     }
@@ -134,7 +175,7 @@ fun MetricCard(title: String, value: String, unit: String, progress: Float, goal
         modifier = Modifier
 //            .background(Color.White)
             .width(170.dp)
-            .height(130.dp),
+            .height(140.dp),
         shape = RoundedCornerShape(16.dp),
         elevation = CardDefaults.cardElevation(4.dp),
         colors = CardDefaults.cardColors(containerColor = Color.White)
@@ -393,8 +434,3 @@ fun ChartCard(title: String, subtitle: String, content: @Composable BoxScope.() 
 }
 
 
-@Preview(showBackground = true)
-@Composable
-fun Preview(){
-    WearableDashboard()
-}
