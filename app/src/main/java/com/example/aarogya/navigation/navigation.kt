@@ -34,7 +34,7 @@ fun AarogyaNavigation(context: Context) {
     Scaffold(
         topBar = {
             val currentRoute = currentRoute(navController)
-            if (currentRoute !in listOf("splash", "login")) {
+            if (currentRoute !in listOf("splash", "login","info")) {
                 TopAppBar(
                     title = { Text("Aarogya", color = Color.Black) },
                     colors = TopAppBarDefaults.topAppBarColors(containerColor = Color(0xFF4CE116))
@@ -83,13 +83,35 @@ fun AarogyaNavigation(context: Context) {
             // 🟢 Info screen collects and updates data
             composable("info") {
                 UserInfoScreen(
-                    onSubmit = { name, a, g, h, w ->
+
+                    onSubmit = { name, a, g, h, w, activity, goal ->
+                        if (name.isBlank() || a.isBlank() || g.isBlank() || h.isBlank() || w.isBlank()) {
+                            // Show a snackbar instead of navigating
+                            // You can pass a callback to UserInfoScreen to show an error message
+                            navController.currentBackStackEntry?.savedStateHandle?.set("errorMessage", "All fields are required")
+                            return@UserInfoScreen
+                        }
+                        // Safely parse and handle blank inputs
+                        val safeAge = a.toIntOrNull() ?: 0
+                        val safeHeight = h.toFloatOrNull() ?: 0f
+                        val safeWeight = w.toFloatOrNull() ?: 0f
+                        val safeGender = g.ifBlank { "Unknown" }
+                        if (safeAge == null || safeHeight == null || safeWeight == null) {
+                            navController.currentBackStackEntry?.savedStateHandle?.set("errorMessage", "Please enter valid numbers for age, height, and weight")
+                            return@UserInfoScreen
+                        }
+
                         username = name
-                        age = a.toIntOrNull() ?: 0
-                        gender = g
-                        height = h.toFloatOrNull() ?: 0f
-                        weight = w.toFloatOrNull() ?: 0f
+                        age = safeAge
+                        gender = safeGender
+                        height = safeHeight
+                        weight = safeWeight
+
                         navController.navigate("dashboard")
+
+                        // 🟣 Also store activity + goal in SavedStateHandle for macro screen
+                        navController.currentBackStackEntry?.savedStateHandle?.set("activityLevel", activity)
+                        navController.currentBackStackEntry?.savedStateHandle?.set("goal", goal)
                     }
                 )
             }
@@ -107,7 +129,22 @@ fun AarogyaNavigation(context: Context) {
             }
 
             composable("community") { CommunityAndLeaderboardScreen(navController) }
-            composable("macro") { MacrosAnalysisScreen(navController) }
+            composable("macro") {
+                val savedStateHandle = navController.previousBackStackEntry?.savedStateHandle
+                val activityLevel = savedStateHandle?.get<String>("activityLevel") ?: "moderate"
+                val goal = savedStateHandle?.get<String>("goal") ?: "maintain"
+
+                MacrosAnalysisScreen(
+                    navController = navController,
+                    age = age,
+                    gender = gender,
+                    heightCm = height.toDouble(),
+                    weightKg = weight.toDouble(),
+                    activityLevel = activityLevel,
+                    goal = goal
+                )
+            }
+
         }
     }
 }
