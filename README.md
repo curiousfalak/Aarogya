@@ -149,5 +149,8 @@ git clone https://github.com/anuragkanojiya1/Aarogya.git
 cd Aarogya
 
 # Open the app in Android Studio
+```
 
+## License
 
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
