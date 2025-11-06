@@ -114,12 +114,42 @@ fun WearableDashboard(
         Spacer(modifier = Modifier.height(24.dp))
 
         // ✅ Rest of the Dashboard
-        Text(
-            text = "Wearable Data",
-            style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
-            color = Color.Black,
-            fontSize = 20.sp
-        )
+        // 🔹 Wearable Data Heading + Sync Button
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = "Wearable Data",
+                style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
+                color = Color.Black,
+                fontSize = 20.sp
+            )
+
+            // 🔘 Sync Button
+            OutlinedButton(
+                onClick = { /* TODO: Sync wearable data logic */ },
+                shape = RoundedCornerShape(12.dp),
+                border = ButtonDefaults.outlinedButtonBorder,
+                contentPadding = PaddingValues(horizontal = 12.dp, vertical = 6.dp)
+            ) {
+                Icon(
+                    painter = painterResource(id = R.drawable.img_2),
+                    contentDescription = "Sync",
+                    tint = Color(0xFF1EE56E),
+                    modifier = Modifier.size(18.dp)
+                )
+                Spacer(modifier = Modifier.width(6.dp))
+                Text(
+                    text = "Sync",
+                    color = Color(0xFF1EE56E),
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 14.sp
+                )
+            }
+        }
+
 
         Spacer(modifier = Modifier.height(16.dp))
 
