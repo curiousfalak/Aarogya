@@ -128,6 +128,32 @@ fun WearableDashboard(
         StepsTrendChart()
         Spacer(modifier = Modifier.height(24.dp))
         CaloriesBurnedChart()
+        Spacer(modifier = Modifier.height(24.dp))
+
+// 🎥 Exercise Pose Detection Button
+        Button(
+            onClick = { /* TODO: Navigate to Camera/Exercise Screen */ },
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(55.dp),
+            shape = RoundedCornerShape(14.dp),
+            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF1EE56E))
+        ) {
+            Icon(
+                painter = painterResource(id = R.drawable.img_1),
+                contentDescription = "Camera",
+                tint = Color.White,
+                modifier = Modifier.size(22.dp)
+            )
+            Spacer(modifier = Modifier.width(8.dp))
+            Text(
+                text = "Start Exercise Pose Detection",
+                color = Color.White,
+                fontSize = 16.sp,
+                fontWeight = FontWeight.Bold
+            )
+        }
+
     }
 }
 
