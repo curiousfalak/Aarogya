@@ -113,7 +113,7 @@ fun UserInfoScreen(onSubmit: (String, String, String, String, String, String, St
                             onSubmit(username, age, gender, height, weight, selectedActivity, selectedGoal)
 
                             scope.launch {
-                                userPreferences.saveUserData(
+                                 userPreferences.saveUserData(
                                     age.toInt(),
                                     gender,
                                     height.toInt(),
